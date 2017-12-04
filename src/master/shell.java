@@ -1,5 +1,11 @@
 package master;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.geom.Line2D;
+import java.beans.EventHandler;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,7 +39,7 @@ public class shell implements LocationImpl {
             System.out.println("Ошибка");
         }
         finally {
-            System.out.println("В файле - " + count + " строк");
+            System.out.println("В файле " + File_name + " " + count + " строк");
         }
         return al;
     }
@@ -49,10 +55,10 @@ public class shell implements LocationImpl {
            }
         }
         if (count == 0){
-            System.out.println("Ошибок с " + mask + " нет");;
+           // System.out.println("Ошибок с " + mask + " нет");;
         }
         else
-            System.out.println("Найдено ошибок - " + count);
+            System.out.println("Найдено " + count + " совпадений");
         return output_data;
     }
 
@@ -83,13 +89,70 @@ public class shell implements LocationImpl {
             arrayList.add(data.get(i));
         }
 
-        shell read = new shell();
+        shell shell = new shell();
         for (int i = 0; i <arrayList.size() ; i++) {
 //            System.out.println(arrayList.get(i));
-//            System.out.println(read.input(arrayList.get(i)));
-            read.output(read.input(arrayList.get(i)), mask);
+//            System.out.println(shell.input(arrayList.get(i)));
+            shell.output(shell.input(arrayList.get(i)), mask);
         }
 
         return arrayList;
     }
+
+    public static JFrame getFrame(){
+
+        JFrame jFrame = new JFrame();
+        jFrame.setVisible(true);
+        jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        jFrame.setLocationRelativeTo(null);
+        jFrame.setSize(500,500);
+       //Для рисования
+       // jFrame.add(new MyComponent());
+        //Создаем панель ?
+        JPanel jPanel = new JPanel();
+        jFrame.add(jPanel);
+
+        //Создаем кнопку под названием submit
+        JButton jb = new JButton("submit");
+        jPanel.add(jb);
+        /*
+        * добавляем листенер который отслеживает эвент(нажатие на кнопку) и создаем анонимный класс с функционалом
+        * который активируется после нажатия этой кнопки
+        * */
+//        jb.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                //jPanel.setBackground(Color.BLUE);
+//                jFrame.setTitle(((JButton) e.getSource()).getText());
+//            }
+//        }
+//        );
+        //Аналог кода выше
+        jb.addActionListener(EventHandler.create(ActionListener.class, jFrame, "title", "source.text"));
+
+        return jFrame;
+    }
+
+    public static class MyComponent extends JComponent {
+        @Override
+        protected void paintComponent(Graphics g) {
+
+            String img = "D:\\Dev\\IDEAProjects\\DevHome\\src\\img1.jpg";
+
+            //Указываем шрифт
+            Font font = new Font("Arial", Font.BOLD,20);
+            Graphics2D g2 = (Graphics2D)g;
+            g2.setFont(font);
+            //Пишем слово
+            //g2.drawString("Hello World", 20, 20);
+            //Создаем линию
+//            Line2D l2 = new Line2D.Double(70, 70, 90, 90);
+//            g2.draw(l2);
+            //Добавляем в фон изображение по координатам
+            Image image = new ImageIcon(img).getImage();
+            g2.drawImage(image, 100, 100, null);
+
+        }
+    }
+
 }
